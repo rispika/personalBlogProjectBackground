@@ -1,6 +1,7 @@
 package com.example.personalblogsystem;
 
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.example.personalblogsystem.Utils.MailInfo;
 import com.example.personalblogsystem.domain.User;
@@ -24,23 +25,30 @@ class PersonalBlogSystemApplicationTests {
     private StringRedisTemplate stringRedisTemplate;
 
     @Test
-    void test() {
-//        User user = new User();
-//        user.setId(1L);
-//        user.setAccount("123321");
-//        user.setPassword("123321");
-//        user.setName("虎哥");
-//        user.setCreatedTime(new Date());
-//        String json = JSONUtil.toJsonStr(user);
-//        stringRedisTemplate.opsForValue().set("user",json);
-        MailInfo mailInfo = new MailInfo();
-        mailInfo.setTitle("验证码");
-        String verificationCode = RandomUtil.randomStringUpper(5);
-        mailInfo.setMessage("验证码为: " + verificationCode + ";验证码将在30分钟后过期");
-        List<String> mails = new ArrayList<>();
-        mails.add("qq3382868941@163.com");
-        mailInfo.setMails(mails);
-        MailInfo.sendMailToQQ(mailInfo);
+    void send() {
+        MailInfo.sendVerificationCode("3382868941@qq.com");
+    }
+
+    @Test
+    void ttt() {
+        System.out.printf("|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|\n"
+                        + "|             验证码:             |\n"
+                        + "|--------------------------------|\n"
+                        + "|             ASDFF              |\n"
+                        + "|--------------------------------|\n"
+                        + "|     此验证码将在10分钟后过期。     |\n"
+                        + "|--------------------------------|\n"
+                        + "|在此祝您时时快乐，分分精彩，秒秒幸福. |\n"
+                        + "|________________________________|\n"
+        );
+    }
+
+
+    @Test
+    void ccc() {
+        String htmlStr = MailInfo.getHtmlStr("templates/mailHtml.html");
+        htmlStr = StrUtil.replace(htmlStr, 26, "${verificaion}", "qwert", false);
+        System.out.println(htmlStr);
     }
 
 }

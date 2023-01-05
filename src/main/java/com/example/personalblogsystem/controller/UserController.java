@@ -60,6 +60,11 @@ public class UserController {
     }
 
 
+    /**
+     * 根据token获取用户信息
+     * @param token
+     * @return
+     */
     @GetMapping("/token/{token}")
     public Result getUserByToken(@PathVariable("token") String token) {
         return userService.getUserByToken(token);

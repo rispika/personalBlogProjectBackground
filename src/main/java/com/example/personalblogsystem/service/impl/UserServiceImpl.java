@@ -55,12 +55,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //2.判断该用户1分钟内有无发送过
         //2.1 如果发送过,则直接返回
         if (stringRedisTemplate.opsForValue().getOperations().getExpire(REGISTER_CODE + email) >= 1740)
-            return Result.fail("请求时间间隔小于60s");
+            return Result.fail("请求时间间隔小于60s...");
+        //-> 校验该邮箱是否注册过
+        User one = query().eq("email", email).one();
+        if (one != null) {
+            return Result.fail("该邮箱已被注册...");
+        }
         //3.发送邮件
         String verificationCode = MailInfo.sendVerificationCode(email);
         //4.将验证码存入redis
         stringRedisTemplate.opsForValue().set(REGISTER_CODE + email, verificationCode, REG_CODE_TTL, TimeUnit.MINUTES);
-        return Result.success(verificationCode);
+        return Result.success();
     }
 
     /**
@@ -105,18 +110,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String redisCode = stringRedisTemplate.opsForValue().get(REGISTER_CODE + dto.getEmail());
         if (!code.equals(redisCode)) {
             //如果验证码不一致
-            return Result.fail("验证码不一致.");
+            return Result.fail("验证码不一致...");
         }
-        //2.封装User
+        //2.判断该账号是否有人注册过
+        User account = query().eq("account", dto.getAccount()).one();
+        if (account != null) {
+            return Result.fail("该账号已被注册过...");
+        }
+        //3.封装User
         User user = new User();
         user.setAccount(dto.getAccount());
         user.setEmail(dto.getEmail());
         user.setPassword(dto.getPassword());
         user.setCreatedTime(new Date());
         user.setName("用户" + RandomUtil.randomString(5));
-        //3.存入数据库
+        //4.存入数据库
         save(user);
-        return Result.success();
+        //5.1.拷贝并生成token
+        UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
+        Map<String, Object> objectMap = BeanUtil.beanToMap(userDTO, new HashMap<>(),
+                CopyOptions.create()
+                        .setIgnoreNullValue(true)
+                        .setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
+        String token = IdUtil.randomUUID();
+        //5.2存入redis
+        stringRedisTemplate.opsForHash().putAll(LOGIN_TOKEN+token,objectMap);
+        stringRedisTemplate.opsForHash().getOperations().expire(LOGIN_TOKEN+token,LOGIN_TOKEN_TTL,TimeUnit.MINUTES);
+        //6.返回token
+        return Result.success(token);
     }
 
     /**
