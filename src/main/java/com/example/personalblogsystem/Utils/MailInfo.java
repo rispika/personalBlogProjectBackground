@@ -80,6 +80,13 @@ public class MailInfo {
         }
     }
 
+    /**
+     * @author ris
+     * @createTime 2023/1/8 17:35
+     * @desc 用于发送邮箱验证码
+     * @param email
+     * @return 验证码
+     */
     public static String sendVerificationCode(String email) {
         MailInfo mailInfo = new MailInfo();
         mailInfo.setTitle("一个不知名小网站传来的验证码");

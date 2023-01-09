@@ -1,6 +1,11 @@
 server:
   port: 9000
 spring:
+  # max-file-size:servlet每次接收单个文件的最大容量；max-request-size：指的是单次请求接收的文件最大容量
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 50MB
   datasource:
     url: jdbc:mysql://localhost:3306/blog?characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
     username: root

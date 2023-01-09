@@ -26,7 +26,7 @@ class PersonalBlogSystemApplicationTests {
 
     @Test
     void send() {
-        MailInfo.sendVerificationCode("3382868941@qq.com");
+//        MailInfo.sendVerificationCode("3382868941@qq.com");
     }
 
     @Test
@@ -46,9 +46,9 @@ class PersonalBlogSystemApplicationTests {
 
     @Test
     void ccc() {
-        String htmlStr = MailInfo.getHtmlStr("templates/mailHtml.html");
-        htmlStr = StrUtil.replace(htmlStr, 26, "${verificaion}", "qwert", false);
-        System.out.println(htmlStr);
+//        String htmlStr = MailInfo.getHtmlStr("templates/mailHtml.html");
+//        htmlStr = StrUtil.replace(htmlStr, 26, "${verificaion}", "qwert", false);
+//        System.out.println(htmlStr);
     }
 
 }

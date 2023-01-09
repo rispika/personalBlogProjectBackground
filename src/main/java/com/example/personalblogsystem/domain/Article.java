@@ -6,14 +6,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 @Data
-public class User {
+public class Article {
 
     private Long id;
-    private String account;
-    private String password;
     private String name;
-    private String email;
-    @DateTimeFormat(pattern = "yy-MM-dd")
-    private Date createdTime;
+    private String label;
+    private String content;
+    private String imgPath;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date time;
+    private String md5;
 
 }

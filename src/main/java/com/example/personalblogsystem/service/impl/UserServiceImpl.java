@@ -54,7 +54,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return Result.fail("邮箱格式错误!");
         //2.判断该用户1分钟内有无发送过
         //2.1 如果发送过,则直接返回
-        if (stringRedisTemplate.opsForValue().getOperations().getExpire(REGISTER_CODE + email) >= 1740)
+        if (stringRedisTemplate.opsForValue().getOperations().getExpire(REGISTER_CODE + email) >= 540)
             return Result.fail("请求时间间隔小于60s...");
         //-> 校验该邮箱是否注册过
         User one = query().eq("email", email).one();

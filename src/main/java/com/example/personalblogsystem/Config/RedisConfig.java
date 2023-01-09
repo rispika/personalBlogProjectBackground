@@ -11,6 +11,13 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration //当前类为配置类
 public class RedisConfig {
 
+    /**
+     * @author ris
+     * @createTime 2023/1/9 9:07
+     * @desc redis序列化
+     * @param connectionFactory
+     * @return
+     */
     @Bean
     public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         // 创建redisTemplate对象
